@@ -5,24 +5,14 @@ pipeline {
   stages {
     stage('Buzz Build') {
       steps {
-        container('global-maven3-jdk8') {
           echo 'Buzz Build'
-          sh '''echo I am a $BUZZ_NAME
-          ./jenkins/build.sh
-          '''
-          archiveArtifacts(artifacts: 'target/*.jar', fingerprint: true)
-        }
       }
     }
     stage('Buzz Test') {
       parallel {
         stage('Testing A') {
           steps {
-            container('global-maven3-jdk8') {
               echo 'Buzz Test A'
-              sh './jenkins/test-all.sh'
-              junit '**/surefire-reports/**/*.xml'
-            }
           }
         }
         stage('Testing B') {
