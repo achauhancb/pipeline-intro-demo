@@ -9,8 +9,17 @@ pipeline {
               label 'java-maven'
             }
           }
+          environment {
+            BUZZ_NAME = 'Java 7 Bee'
+          }
           steps {
-            echo 'Build Artifact Java 7'
+            container('global-maven3-jdk7') {
+              echo 'Build Artifact Java 7'
+              sh '''echo I am a $BUZZ_NAME
+              ./jenkins/build.sh
+              '''
+              archiveArtifacts(artifacts: 'target/*.jar', fingerprint: true)
+            }
           }
           post {
             always {
@@ -27,14 +36,19 @@ pipeline {
             node {
               label 'java-maven'
             }
-
           }
           environment {
             BUZZ_NAME = 'Java 8 Bee'
           }
           steps {
- 	    echo 'Build Artifact Java 8'
-            echo 'Stash Artifacts Java 8'
+            container('global-maven3-jdk8') {
+              echo 'Build Artifact Java 8'
+              sh '''echo I am a $BUZZ_NAME
+              ./jenkins/build.sh
+              '''
+              archiveArtifacts(artifacts: 'target/*.jar', fingerprint: true)
+              echo 'Stash Artifacts Java 8'
+            }
           }
         }
       }
