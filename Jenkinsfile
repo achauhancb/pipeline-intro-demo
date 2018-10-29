@@ -1,11 +1,25 @@
 pipeline {
   agent {
-    label 'java-maven'
-  }
+   kubernetes {
+     label 'java8-maven3-pod'
+     yaml """
+apiVersion: v1
+kind: Pod
+spec:
+ containers:
+ - name: maven3
+   image: maven:3.3.9-jdk-8-alpine
+   command: ['cat']
+   tty: true
+"""
+   }
+ }
   stages {
     stage('Buzz Build') {
       steps {
-          echo 'Buzz Build'
+        container('maven3') {
+          sh 'mvn -version'
+        }
       }
     }
     stage('Buzz Test') {
